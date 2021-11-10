@@ -1,0 +1,19 @@
+---
+  - name: install Nginx at DO
+    hosts: stage_1
+    tasks:
+ 
+     - name: Install package nginx
+       apt: 
+        name: nginx 
+        update_cache: yes 
+        state: latest
+    
+ 
+     - name: Starting service nginx
+       service: 
+         name: nginx
+         state: started
+         enabled: yes
+       
+    
