@@ -1,2 +1,7 @@
-[stage_1]
-ksumag   ansible_host=134.122.76.147  ansible_user=root  ansible_ssh_private_key_file=/home/ksumag/.ssh/my_DO_rsa
+---
+   stage_1:
+          hosts:
+           ksumag:
+              ansible_host: 164.92.250.87
+              ansible_user: root
+              ansible_ssh_private_key_file: /home/ksumag/.ssh/my_DO_rsa

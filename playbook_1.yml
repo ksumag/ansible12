@@ -1,19 +1,65 @@
 ---
   - name: install Nginx at DO
     hosts: stage_1
+    vars: 
+      source_folder: /mnt/e/rebrain/ansible/1
+      destin_folder_site: /var/www/html
+      destin_folder_conf: /etc/nginx/sites-available
+      enabled:  /etc/nginx/sites-enabled/
+
     tasks:
  
      - name: Install package nginx
        apt: 
-        name: nginx 
+        name: nginx=1.14.0-0ubuntu1.9
         update_cache: yes 
-        state: latest
+        state: present
+       notify:  
+         - Starting service nginx
+
+     - name: mkdir1
+       command: mkdir {{ destin_folder_site }}/v1
+       ignore_errors: true
+     - name: mkdir2
+       command: mkdir {{ destin_folder_site }}/v2  
+       ignore_errors: true  
     
- 
+     - name: copy index.html-1
+       copy: src={{ source_folder }}/v1_index.html dest={{ destin_folder_site }}/v1/index.html 
+            
+       notify:  
+         - Reload service nginx
+
+     - name: copy index.html-2
+       copy: src={{ source_folder }}/v2_index.html dest={{ destin_folder_site }}/v2/index.html
+      
+       notify:  
+         - Reload service nginx
+     - name: copy nginx.conf
+       copy: src={{ source_folder }}/nginx.conf dest=/etc/nginx
+       
+     - name: generating config
+       block:
+        - name: generating config1
+          template: src={{ source_folder }}/v1.conf.j2 dest={{ destin_folder_conf }}/v1.conf 
+        - name: generating config2
+          template: src={{ source_folder }}/v2.conf.j2 dest={{ destin_folder_conf }}/v2.conf
+       notify:  
+         - Reload service nginx    
+
+     - name: make a simlink
+       command: ln -s {{ destin_folder_conf }}/v1.conf {{ enabled }}; ln -s {{ destin_folder_conf }}/v2.conf {{ enabled }}
+       ignore_errors: true
+
+    handlers: 
      - name: Starting service nginx
        service: 
          name: nginx
          state: started
          enabled: yes
+     - name: Reload service nginx
+       service: 
+        name: nginx
+        state: reloaded
        
     

@@ -1,0 +1,14 @@
+
+server {
+        listen {{ansible_default_ipv4.address}}:8080;
+       # listen [::]:80;
+ 
+        root /var/www/html/v2;
+        index index.php index.html;
+ 
+        server_name v2.com www.v2.com;
+ 
+        location / {
+                
+        }
+}
