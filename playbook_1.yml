@@ -2,12 +2,20 @@
   - name: install Nginx at DO
     hosts: stage_1
     vars: 
-      source_folder_files: /mnt/e/rebrain/ansible/1/files
-      source_folder_templates: /mnt/e/rebrain/ansible/1/template
+      source_folder_files: ./files
+      source_folder_templates: ./template
       destin_folder_site: /var/www/html
       destin_folder_conf: /etc/nginx/sites-available
-      enabled:  /etc/nginx/sites-enabled/
-
+      enabled:  /etc/nginx/sites-enabled
+      webserver:
+        - v1
+        - v2
+      server_name:
+        - v1.com
+        - v2.com
+      port: 
+        - 80
+        - 8080
     tasks:
  
      - name: Install package nginx
@@ -19,7 +27,7 @@
          - Starting service nginx
 
      - name: make sites dir
-       ansible.builtin.file: 
+       file: 
         path: "{{ item }}"
         state: directory
         mode: '0755'
@@ -44,13 +52,13 @@
             dest: "{{ item.dest }}"
             mode: "{{ item.mode }}"
        with_items:
-             -  { src: "{{ source_folder_templates }}/v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644"}
-             -  { src: "{{ source_folder_templates }}/v2.conf.j2" , dest: "{{ destin_folder_conf }}/v2.conf", mode: "644"}  
+             -  { src: "{{ source_folder_templates }}/v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", port: "{{ port[0] }}", webserver: "{{ webserver[0] }}"}
+             -  { src: "{{ source_folder_templates }}/v1.conf.j2" , dest: "{{ destin_folder_conf }}/v2.conf", mode: "644", server_name: "{{ server_name[1] }}", port: "{{ port[1] }}", webserver: "{{ webserver[1] }}"}  
        notify:  
          - Reload service nginx    
 
      - name: make a simlink
-       ansible.builtin.file:
+       file:
          src: "{{ item.src }}"
          dest: "{{ item.dest }}"
          owner: root
@@ -59,8 +67,9 @@
        loop:
            - { src: "{{ destin_folder_conf }}/v1.conf", dest: "{{ enabled }}/v1.conf" }
            - { src: "{{ destin_folder_conf }}/v2.conf", dest: "{{ enabled }}/v2.conf" } 
-          
-       
+       notify:  
+         - Reload service nginx   
+        
     handlers: 
      - name: Starting service nginx
        service: 

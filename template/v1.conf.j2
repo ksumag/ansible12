@@ -1,12 +1,13 @@
 
 server {
-        listen {{ansible_default_ipv4.address}}:80;
-       # listen [::]:80;
+        
+        listen {{ansible_default_ipv4.address}}:{{ item.port }};
+       
  
-        root /var/www/html/v1;
+        root /var/www/html/{{ item.webserver }};
         index index.php index.html;
  
-        server_name v1.com www.v1.com;
+        server_name {{ item.server_name }} www.{{ item.server_name }};
  
         location / {
                 
