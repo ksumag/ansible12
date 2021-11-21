@@ -2,10 +2,10 @@
   - name: install Nginx at DO
     hosts: stage_1
     vars: 
-      source_folder_files: ./files
-      source_folder_templates: ./template
+     # source_folder_files: ./files
+     # source_folder_templates: ./templates
       destin_folder_site: /var/www/html
-      destin_folder_conf: /etc/nginx/sites-available
+      destin_folder_conf: /etc/nginx/conf.d
       enabled:  /etc/nginx/sites-enabled
       webserver:
         - v1
@@ -40,9 +40,9 @@
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
        loop:
-          - { src: "{{ source_folder_files }}/v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html" }
-          - { src: "{{ source_folder_files }}/v2_index.html", dest: "{{ destin_folder_site }}/v2/index.html" }  
-          - { src: "{{ source_folder_files }}/nginx.conf", dest: "/etc/nginx" }
+          - { src: "v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html" }
+          - { src: "v2_index.html", dest: "{{ destin_folder_site }}/v2/index.html" }  
+          - { src: "nginx.conf", dest: "/etc/nginx" }
        notify:  
          - Reload service nginx
         
@@ -52,8 +52,8 @@
             dest: "{{ item.dest }}"
             mode: "{{ item.mode }}"
        with_items:
-             -  { src: "{{ source_folder_templates }}/v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", port: "{{ port[0] }}", webserver: "{{ webserver[0] }}"}
-             -  { src: "{{ source_folder_templates }}/v1.conf.j2" , dest: "{{ destin_folder_conf }}/v2.conf", mode: "644", server_name: "{{ server_name[1] }}", port: "{{ port[1] }}", webserver: "{{ webserver[1] }}"}  
+             -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", port: "{{ port[0] }}", webserver: "{{ webserver[0] }}"}
+             -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v2.conf", mode: "644", server_name: "{{ server_name[1] }}", port: "{{ port[1] }}", webserver: "{{ webserver[1] }}"}  
        notify:  
          - Reload service nginx    
 
