@@ -2,8 +2,6 @@
   - name: install Nginx at DO
     hosts: stage_1
     vars: 
-     # source_folder_files: ./files
-     # source_folder_templates: ./templates
       destin_folder_site: /var/www/html
       destin_folder_conf: /etc/nginx/conf.d
       enabled:  /etc/nginx/sites-enabled
