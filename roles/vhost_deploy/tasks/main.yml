@@ -1,0 +1,43 @@
+---
+# tasks file for vhost_deploy
+  - name: make sites dir
+    file: 
+       path: "{{ item }}"
+       state: directory
+       mode: '0755'
+    loop: 
+         - "{{ destin_folder_site }}/v1"
+         - "{{ destin_folder_site }}/v2"
+  - name: copy files
+    copy: 
+       src: "{{ item.src }}"
+       dest: "{{ item.dest }}"
+    loop:
+        - { src: "v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html" }
+        - { src: "v2_index.html", dest: "{{ destin_folder_site }}/v2/index.html" }  
+    notify:  
+       - Reload service nginx      
+  - name: generating  vhost's configs
+    template:
+          src: "{{ item.src }}"
+          dest: "{{ item.dest }}"
+          mode: "{{ item.mode }}"
+    with_items:
+           -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", port: "{{ port[0] }}", webserver: "{{ webserver[0] }}"}
+           -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v2.conf", mode: "644", server_name: "{{ server_name[1] }}", port: "{{ port[1] }}", webserver: "{{ webserver[1] }}"}  
+    notify:  
+       - Reload service nginx    
+
+  - name: make a simlink
+    file:
+       src: "{{ item.src }}"
+       dest: "{{ item.dest }}"
+       owner: root
+       group: root
+       state: link
+    loop:
+         - { src: "{{ destin_folder_conf }}/v1.conf", dest: "{{ enabled }}/v1.conf" }
+         - { src: "{{ destin_folder_conf }}/v2.conf", dest: "{{ enabled }}/v2.conf" } 
+    notify:  
+       - Reload service nginx   
+       

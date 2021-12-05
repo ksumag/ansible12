@@ -1,8 +1,9 @@
 ---
-  - name: install Nginx at DO
+  - name: install Nginx at DO with two vhosts
     hosts: stage_1
     roles: 
       - nginx_deploy
+      - vhost_deploy
       
     
  
