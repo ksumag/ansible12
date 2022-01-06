@@ -14,5 +14,10 @@
        dest: "/etc/nginx"
     notify:  
        - Reload service nginx
-        
+  - name: Remove default nginx config
+    file:
+      path: /etc/nginx/sites-enabled/default
+      state: absent    
+    notify:  
+       - Reload service nginx    
   

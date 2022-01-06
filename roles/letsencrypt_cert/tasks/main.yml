@@ -1,0 +1,13 @@
+---
+# tasks file for letsencrypt_cert
+ - name: Create letsencrypt certificate
+   shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ inventory_hostname }}
+   args:
+     creates: /etc/letsencrypt/live/{{ inventory_hostname }}
+
+ - name: Add letsencrypt cronjob for cert renewal
+   cron:
+      name: letsencrypt_renewal
+      special_time: weekly
+      job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ inventory_hostname }} && service nginx reload
+        

@@ -5,10 +5,12 @@
   enabled:  /etc/nginx/sites-enabled
   webserver:
      - v1
-     - v2
+  #   - v2
   server_name:
-     - v1.com
-     - v2.com
+     - "{{ inventory_hostname }}" #"dymon_ksu_at_gmail_com.devops.rebrain.srwx.net"
+  #   - v2.com
   port: 
-     - 80
-     - 8080 
+  #   - 80
+  #   - 8080 
+     - 443
+  

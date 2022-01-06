@@ -1,0 +1,6 @@
+---
+# vars file for letsencrypt
+  enabled:  /etc/nginx/sites-enabled
+  server_name:
+     - "{{ inventory_hostname }}" #"dymon_ksu_at_gmail_com.devops.rebrain.srwx.net"
+  #   - v2.com

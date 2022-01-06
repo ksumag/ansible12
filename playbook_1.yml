@@ -1,9 +1,17 @@
 ---
-  - name: install Nginx at DO with two vhosts
+  - name: ans_06
     hosts: stage_1
+    pre_tasks:
+     - raw: apt-get install -y python-simplejson
     roles: 
-      - nginx_deploy
-      - vhost_deploy
+      - role: nginx_deploy
+        tags: nginx
+      - role: letsencrypt_pre
+        tags: li
+      - role: letsencrypt_cert
+        tags: srt
+      - role: vhost_deploy
+        tags: vhost
       
     
  
