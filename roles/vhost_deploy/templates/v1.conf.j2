@@ -1,16 +1,16 @@
 
 server {
         
-        listen {{ ansible_default_ipv4.address }}:{{ item.port }}; 
+        listen {{ item.port }}; 
        
  
         root /var/www/html/{{ item.webserver }};
-        index index.php index.html;
+       
  
-        server_name {{ item.server_name }} www.{{ item.server_name }};
+        server_name {{ server_name }} www.{{ server_name }};
         ssl on;
-        ssl_certificate /etc/letsencrypt/live/{{ item.server_name }}/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/{{ item.server_name }}/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/{{ server_name }}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/{{ server_name }}/privkey.pem;
         ssl_session_cache shared:SSL:50m;
         ssl_session_timeout 5m;
         ssl_stapling on;
@@ -24,6 +24,6 @@ server {
           
        
         location / {
-                
+              index index.php index.html;   
         }
 }

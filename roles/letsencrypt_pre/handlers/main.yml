@@ -1,6 +1,0 @@
----
-# handlers file for letsencrypt
-  - name: Reload service nginx
-    service: 
-        name: nginx
-        state: reloaded

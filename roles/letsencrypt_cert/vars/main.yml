@@ -1,4 +1,0 @@
----
-# vars file for letsencrypt_cert
-   letsencrypt_email: "dymon.ksu@gmail.com"
- #  my_modified_host: "{{ inventory_hostname | replace('_','-') }} "
