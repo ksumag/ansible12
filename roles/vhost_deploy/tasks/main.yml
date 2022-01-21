@@ -14,11 +14,12 @@
     copy: 
        src: "{{ item.src }}"
        dest: "{{ item.dest }}"
-    loop:
-        - { src: "v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html" }
-        - { src: "fullchain.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/fullchain.pem" }
-        - { src: "privkey.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/privkey.pem" }
-        - { src: "task10", dest: "~/.ssh/task10" }
+       mode: "{{ item.mode }}"
+    with_items:
+        - { src: "v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html", mode: "755" }
+        - { src: "fullchain.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/fullchain.pem", mode: "644" }
+        - { src: "privkey.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/privkey.pem", mode: "644" }
+        - { src: "task10", dest: "~/.ssh/task10", mode: "600" }
     notify:  
        - Reload service nginx      
 
