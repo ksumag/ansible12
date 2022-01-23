@@ -20,13 +20,10 @@
         - { src: "fullchain.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/fullchain.pem", mode: "644" }
         - { src: "privkey.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/privkey.pem", mode: "644" }
         - { src: "task10", dest: "~/.ssh/task10", mode: "600" }
+        - { src: "dhparams.pem", dest: "/etc/nginx/dhparams.pem", mode: "644" }
     notify:  
        - Reload service nginx      
 
-  - name: Generate dhparams
-    shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
-    args:
-      creates: /etc/nginx/dhparams.pem   
 
   - name: generating  vhost's configs
     template:

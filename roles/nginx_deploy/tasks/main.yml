@@ -12,6 +12,7 @@
     copy: 
        src: "nginx.conf"
        dest: "/etc/nginx"
+       mode: "644"
     notify:  
        - Reload service nginx
   - name: Remove default nginx config
