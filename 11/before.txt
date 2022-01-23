@@ -1,0 +1,4 @@
+internal-error: Unexpected error code 1 from execution of: ansible-playbook --syntax-check /mnt/e/rebrain/ansible/10/playbook_1.yml
+../../mnt/e/rebrain/ansible/10/playbook_1.yml:1 [WARNING]: provided hosts list is empty, only localhost is available. Note that
+the implicit localhost does not match 'all'
+ERROR! Attempting to decrypt but no vault secrets found
