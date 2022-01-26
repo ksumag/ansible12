@@ -1,11 +1,18 @@
 ---
-  - name: ans_10
-    hosts: stage_1
+  - name: ans_12
+    hosts: all
     roles: 
       - role: nginx_deploy
-        tags: nginx
-      - role: vhost_deploy
-        tags: vhost
+    tasks:
+      - name: setting load balancer
+        include_role:
+         name: loadbalancer
+        when: inventory_hostname in groups ['loadbalancer_servers']
+     
+      - name: deploy site
+        include_role:
+         name: vhost_deploy
+        when: inventory_hostname in groups ['app_servers'] 
       
     
  

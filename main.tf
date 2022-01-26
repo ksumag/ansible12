@@ -23,7 +23,7 @@ provider "digitalocean" {
    token = var.DO_token
 }
 provider "aws" {
-  region     = "us-west-2"
+  region     = var.region
   access_key = var.my-access-key
   secret_key = var.my-secret-key
 }
@@ -42,11 +42,18 @@ data "digitalocean_ssh_key" "rebrain_key" {
 
 resource "digitalocean_droplet" "ksumag" {
   image  = "ubuntu-18-04-x64"
-  name   = "ksumag"
+  name   = "${element(var.devs, count.index)}"
   region = "fra1"
   size   = "s-1vcpu-1gb"
+  count = local.VPS_quantity
   tags   = ["devops", "dymon_ksu_at_gmail_com"]
-  ssh_keys = [digitalocean_ssh_key.my_key.fingerprint,data.digitalocean_ssh_key.rebrain_key.id ]    
+  ssh_keys = [digitalocean_ssh_key.my_key.fingerprint,data.digitalocean_ssh_key.rebrain_key.id ]   
+}
+
+locals {
+  
+  VPS_quantity = "${length(var.devs)}"
+  
 }
 
 data "aws_route53_zone" "primary" {
@@ -58,19 +65,28 @@ resource "aws_route53_record" "myrecord" {
   name    = "${var.login_rebrain}.${data.aws_route53_zone.primary.name}"
   type    = "A"
   ttl     = "300"
-  records = [digitalocean_droplet.ksumag.ipv4_address]
+  records = [digitalocean_droplet.ksumag.0.ipv4_address]
 }
 
 resource "local_file" "inventory_1" {
     content     = templatefile("${path.module}/inventory.tpl", { 
                            
                           access_key = var.my_private,
-                          ip = digitalocean_droplet.ksumag.ipv4_address,
-                          name = aws_route53_record.myrecord.name 
+                          ip = digitalocean_droplet.ksumag.*.ipv4_address,
+                          name = digitalocean_droplet.ksumag.*.name,
+                          VPStype = var.devs 
       })
     filename = "${path.module}/inventory_1.yml"
 }
 
-
+resource "null_resource" "Ansible_run" {
+  provisioner "local-exec" {
+    command = "sleep 30 && ansible-playbook -i inventory_1.yml playbook_1.yml " 
+ }
+  depends_on = [
+    digitalocean_droplet.ksumag,
+    local_file.inventory_1
+  ]
+}
     
     

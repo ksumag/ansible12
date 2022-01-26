@@ -8,7 +8,7 @@
   
   server_name: "{{ inventory_hostname }}" 
   
-  port: 
+  hport: 
   
-     - 443
+     - 80
   

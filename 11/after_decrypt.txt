@@ -1,5 +1,0 @@
-risky-file-permissions: File permissions unset or incorrect
-../../mnt/e/rebrain/ansible/10/roles/nginx_deploy/tasks/main.yml:11 Task/Handler: copy nginx.conf
-
-command-instead-of-shell: Use shell only when shell functionality is required
-../../mnt/e/rebrain/ansible/10/roles/vhost_deploy/tasks/main.yml:26 Task/Handler: Generate dhparams

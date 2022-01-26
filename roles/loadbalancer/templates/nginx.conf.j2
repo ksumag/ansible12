@@ -1,9 +1,29 @@
+{% if  ansible_os_family  == 'Debian' %}
+user www-data;
+{% else %}
+user nginx;
+{% endif %}
+
 events {
-        worker_connections 768;
+        worker_connections 1024;
         # multi_accept on;
 }
 
 http {
+        upstream version2 {
+{% for host in groups['app_servers'] %}
+                server  {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}:{{hport}};
+{% endfor %}
+        }
+
+        server {
+                listen {{hport}};
+                location  / {
+                        proxy_pass http://version2;   
+                }
+        }
+
+
 
         ##
         # Basic Settings
@@ -11,7 +31,7 @@ http {
 
         sendfile on;
         tcp_nopush on;
-        tcp_nodelay on;
+        tcp_nodelay on ;
         keepalive_timeout 65;
         types_hash_max_size 2048;
         # server_tokens off;

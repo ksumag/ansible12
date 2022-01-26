@@ -1,0 +1,4 @@
+---
+# vars file for vhost_deploy
+ main_nginx_folder:  /etc/nginx
+ hport: 80

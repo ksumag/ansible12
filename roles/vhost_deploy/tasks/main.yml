@@ -8,31 +8,15 @@
        recurse: yes
     loop: 
          - "{{ destin_folder_site }}/v1"
-         - "/etc/letsencrypt/live/{{ server_name }}"
-       
-  - name: copy files
-    copy: 
-       src: "{{ item.src }}"
-       dest: "{{ item.dest }}"
-       mode: "{{ item.mode }}"
-    with_items:
-        - { src: "v1_index.html", dest: "{{ destin_folder_site }}/v1/index.html", mode: "755" }
-        - { src: "fullchain.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/fullchain.pem", mode: "644" }
-        - { src: "privkey.pem", dest: "/etc/letsencrypt/live/{{ server_name }}/privkey.pem", mode: "644" }
-        - { src: "task10", dest: "~/.ssh/task10", mode: "600" }
-        - { src: "dhparams.pem", dest: "/etc/nginx/dhparams.pem", mode: "644" }
-    notify:  
-       - Reload service nginx      
 
-
-  - name: generating  vhost's configs
+  - name: generating  vhost's config  & index.html
     template:
           src: "{{ item.src }}"
           dest: "{{ item.dest }}"
           mode: "{{ item.mode }}"
     with_items:
-           -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", port: "{{ port[0] }}", webserver: "{{ webserver[0] }}"}
-         
+           -  { src: "v1.conf.j2" , dest: "{{ destin_folder_conf }}/v1.conf", mode: "644", server_name: "{{ server_name[0] }}", hport: "{{ hport[0] }}", webserver: "{{ webserver[0] }}"}
+           -  { src: "v1_index.html.j2" , dest: "{{ destin_folder_site }}/v1/index.html", mode: "644"}
     notify:  
        - Reload service nginx    
 
