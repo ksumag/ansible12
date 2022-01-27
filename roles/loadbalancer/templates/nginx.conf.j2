@@ -12,7 +12,7 @@ events {
 http {
         upstream version2 {
 {% for host in groups['app_servers'] %}
-                server  {{ hostvars[host]['ansible_facts']['eth0']['ipv4']['address'] }}:{{hport}};
+                server {{host}};
 {% endfor %}
         }
 

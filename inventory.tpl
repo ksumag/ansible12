@@ -6,15 +6,14 @@
      children:
           loadbalancer_servers: 
            hosts:
-%{for index, k in VPStype ~}
-%{if index < 1 ~}  
-              ${name[index]}_${index+1}:
-                ansible_host: ${ip[index]}
+%{for index, k in LB_servers ~}
+              ${name_lb[index]}:
+                ansible_host: ${ip_lb[index]}
+%{endfor ~}  
           app_servers: 
            hosts:
-%{else ~}
-              ${name[index]}_${index}:
-                ansible_host: ${ip[index]}      
-%{endif ~}
+%{for index, k in APP_servers ~}
+              ${name_app[index]}:
+                ansible_host: ${ip_app[index]}      
 %{endfor ~}        
               

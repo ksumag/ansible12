@@ -4,6 +4,6 @@
     template:
           src: "nginx.conf.j2"
           dest: "{{ main_nginx_folder }}/nginx.conf"
-          mode: 644
+          mode: 0644
     notify:  
        - Reload service nginx   

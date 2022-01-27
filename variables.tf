@@ -39,11 +39,17 @@ variable "login_rebrain" {
     
 } 
 
-variable "devs" {
-  description = "whatever, put an loadbalancer at first place"
+variable "apps" {
+  description = "application servers"
   type    = list
-  default = ["loadbalancer", "app", "appppp"]  
+  default = ["app-1", "app-2", "appppp"]  
 }
+variable "lb" {
+  description = "loadbalancer servers"
+  type    = list
+  default = ["lb-1"]  
+}
+
 variable "region" {
   type = string
 }
